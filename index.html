@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
+  <title>Brasa Burger | Cardápio Digital</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #101010;
+      --surface: #191919;
+      --surface2: #222;
+      --yellow: #ffc928;
+      --text: #fff;
+      --muted: #aaa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .demo-banner {
+      width: 100%;
+      padding: 11px 15px;
+      background: var(--yellow);
+      color: #171717;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px 7%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #292929;
+      background: #111;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand img {
+      width: 53px;
+      height: 53px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .brand h1 {
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .brand span {
+      color: var(--yellow);
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .header-tag {
+      border: 1px solid #444;
+      color: var(--yellow);
+      padding: 8px 12px;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .hero {
+      min-height: 340px;
+      margin: 25px 7%;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.95), rgba(0,0,0,.35)),
+        url("produtos/burger-classico.jpg") center/cover;
+      animation: aparecer .8s ease;
+    }
+
+    .hero-content {
+      padding: 40px;
+      max-width: 570px;
+    }
+
+    .hero-label {
+      display: inline-block;
+      background: var(--yellow);
+      color: #111;
+      padding: 7px 12px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .hero h2 {
+      font-size: clamp(30px, 5vw, 52px);
+      line-height: 1.05;
+      margin-bottom: 15px;
+    }
+
+    .hero h2 span {
+      color: var(--yellow);
+    }
+
+    .hero p {
+      color: #ddd;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .section {
+      padding: 15px 7% 60px;
+    }
+
+    .section-title {
+      margin-bottom: 22px;
+    }
+
+    .section-title h2 {
+      font-size: 26px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 7px;
+    }
+
+    .search-box {
+      margin-bottom: 23px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid #333;
+      outline: none;
+      border-radius: 12px;
+      background: var(--surface);
+      color: white;
+      transition: .3s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--yellow);
+      box-shadow: 0 0 0 3px rgba(255,201,40,.1);
+    }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      scrollbar-width: none;
+    }
+
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category {
+      flex-shrink: 0;
+      padding: 11px 19px;
+      border: 1px solid #333;
+      border-radius: 30px;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      transition: .25s;
+      font-size: 13px;
+    }
+
+    .category:hover,
+    .category.active {
+      background: var(--yellow);
+      color: #111;
+      border-color: var(--yellow);
+      font-weight: bold;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .product {
+      background: var(--surface);
+      border: 1px solid #292929;
+      border-radius: 15px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .3s, border-color .3s;
+      animation: subir .5s ease both;
+    }
+
+    .product:hover {
+      transform: translateY(-6px);
+      border-color: var(--yellow);
+    }
+
+    .product img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+      background: #252525;
+    }
+
+    .product-info {
+      padding: 17px;
+    }
+
+    .product-info h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .product-info p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      min-height: 36px;
+    }
+
+    .product-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .price {
+      color: var(--yellow);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .view-more {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .empty {
+      display: none;
+      color: var(--muted);
+      text-align: center;
+      padding: 45px 10px;
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      border-top: 1px solid #292929;
+      padding: 30px 7%;
+      text-align: center;
+      background: #141414;
+    }
+
+    footer h3 {
+      color: var(--yellow);
+      margin-bottom: 10px;
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .footer-demo {
+      margin: 18px auto 0;
+      max-width: 500px;
+      padding: 12px;
+      border: 1px solid #393020;
+      background: #211d12;
+      color: #e8c45b;
+      border-radius: 9px;
+      font-size: 11px;
+    }
+
+    .menvy-credit {
+      margin-top: 22px;
+      color: #777;
+      font-size: 11px;
+    }
+
+    .menvy-credit span {
+      color: var(--yellow);
+      font-weight: bold;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      backdrop-filter: blur(7px);
+    }
+
+    .modal.show {
+      display: flex;
+      animation: aparecer .25s ease;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 430px;
+      background: var(--surface);
+      border: 1px solid #333;
+      border-radius: 17px;
+      overflow: hidden;
+      position: relative;
+      animation: subir .3s ease;
+    }
+
+    .modal-content img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      background: #252525;
+    }
+
+    .modal-info {
+      padding: 22px;
+    }
+
+    .modal-info h2 {
+      margin-bottom: 10px;
+    }
+
+    .modal-info p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .modal-info .price {
+      display: block;
+      margin-top: 17px;
+    }
+
+    .close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 35px;
+      height: 35px;
+      border: none;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: #111;
+      font-size: 21px;
+      cursor: pointer;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes subir {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .product img {
+        height: 160px;
+      }
+
+      .hero {
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      header {
+        padding: 15px 5%;
+      }
+
+      .header-tag {
+        font-size: 9px;
+        padding: 7px 9px;
+      }
+
+      .brand img {
+        width: 43px;
+        height: 43px;
+      }
+
+      .brand h1 {
+        font-size: 17px;
+      }
+
+      .hero {
+        margin: 18px 5%;
+        min-height: 280px;
+      }
+
+      .hero-content {
+        padding: 25px;
+      }
+
+      .section {
+        padding: 15px 5% 45px;
+      }
+
+      .products {
+        gap: 12px;
+      }
+
+      .product img {
+        height: 125px;
+      }
+
+      .product-info {
+        padding: 12px;
+      }
+
+      .product-info h3 {
+        font-size: 14px;
+      }
+
+      .product-info p {
+        font-size: 11px;
+      }
+
+      .price {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="demo-banner">
+    ★ CARDÁPIO DEMONSTRATIVO — EXEMPLO DA MENVY ★
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="logo.png" alt="Logo Brasa Burger">
+      <div>
+        <h1>BRASA <span>BURGER</span></h1>
+        <small>HAMBURGUERIA</small>
+      </div>
+    </div>
+
+    <div class="header-tag">CARDÁPIO DIGITAL</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-label">EXEMPLO DE CARDÁPIO</div>
+      <h2>O sabor que <span>você merece.</span></h2>
+      <p>
+        Conheça nosso cardápio demonstrativo e descubra
+        como seu restaurante pode ter uma apresentação
+        digital moderna.
+      </p>
+    </div>
+  </section>
+
+  <main class="section">
+    <div class="section-title">
+      <h2>Nosso cardápio</h2>
+      <p>Explore as opções do nosso exemplo de cardápio digital.</p>
+    </div>
+
+    <div class="search-box">
+      <input
+        type="text"
+        id="search"
+        placeholder="Pesquisar produto..."
+        autocomplete="off"
+      >
+    </div>
+
+    <div class="categories">
+      <button class="category active" data-category="Todos">Todos</button>
+      <button class="category" data-category="Hambúrgueres">Hambúrgueres</button>
+      <button class="category" data-category="Porções">Porções</button>
+      <button class="category" data-category="Bebidas">Bebidas</button>
+      <button class="category" data-category="Sobremesas">Sobremesas</button>
+    </div>
+
+    <div class="products" id="products"></div>
+  </main>
+
+  <footer>
+    <h3>BRASA BURGER</h3>
+    <p>Exemplo de apresentação de um cardápio digital.</p>
+
+    <div class="footer-demo">
+      Este é um projeto demonstrativo da Menvy.
+      Produtos, imagens, descrições e preços são fictícios
+      e servem apenas para apresentar o modelo.
+    </div>
+
+    <div class="menvy-credit">
+      Uma demonstração <span>MENVY</span> · Design & Tecnologia
+    </div>
+  </footer>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <button class="close" id="closeModal" aria-label="Fechar">×</button>
+      <img id="modalImage" src="" alt="">
+      <div class="modal-info">
+        <h2 id="modalName"></h2>
+        <p id="modalDescription"></p>
+        <span class="price" id="modalPrice"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const produtos = [
+      {
+        nome: "Burger Clássico",
+        categoria: "Hambúrgueres",
+        descricao: "Pão artesanal, hambúrguer, queijo, alface e molho especial.",
+        preco: 24.90,
+        imagem: "produtos/burger-classico.jpg"
+      },
+      {
+        nome: "Burger Bacon",
+        categoria: "Hambúrgueres",
+        descricao: "Hambúrguer artesanal, queijo cheddar e bacon crocante.",
+        preco: 29.90,
+        imagem: "produtos/burger-bacon.jpg"
+      },
+      {
+        nome: "Burger Duplo",
+        categoria: "Hambúrgueres",
+        descricao: "Dois hambúrgueres, queijo duplo e molho especial.",
+        preco: 34.90,
+        imagem: "produtos/burger-duplo.jpg"
+      },
+      {
+        nome: "Batata Frita",
+        categoria: "Porções",
+        descricao: "Porção de batatas fritas crocantes e saborosas.",
+        preco: 16.90,
+        imagem: "produtos/batata-frita.jpg"
+      },
+      {
+        nome: "Onion Rings",
+        categoria: "Porções",
+        descricao: "Anéis de cebola empanados e crocantes.",
+        preco: 18.90,
+        imagem: "produtos/onion-rings.jpg"
+      },
+      {
+        nome: "Coca-Cola",
+        categoria: "Bebidas",
+        descricao: "Refrigerante gelado para acompanhar seu lanche.",
+        preco: 7.00,
+        imagem: "produtos/coca-cola.jpg"
+      },
+      {
+        nome: "Milkshake",
+        categoria: "Bebidas",
+        descricao: "Milkshake cremoso de chocolate.",
+        preco: 14.90,
+        imagem: "produtos/milkshake.jpg"
+      },
+      {
+        nome: "Brownie",
+        categoria: "Sobremesas",
+        descricao: "Brownie de chocolate com textura macia.",
+        preco: 12.90,
+        imagem: "produtos/brownie.jpg"
+      }
+    ];
+
+    let categoriaAtual = "Todos";
+
+    const container = document.getElementById("products");
+    const busca = document.getElementById("search");
+    const modal = document.getElementById("modal");
+
+    function formatarPreco(valor) {
+      return valor.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function renderizar() {
+      const termo = busca.value.toLowerCase();
+
+      const filtrados = produtos.filter(produto => {
+        const correspondeCategoria =
+          categoriaAtual === "Todos" ||
+          produto.categoria === categoriaAtual;
+
+        const correspondeBusca =
+          produto.nome.toLowerCase().includes(termo) ||
+          produto.descricao.toLowerCase().includes(termo);
+
+        return correspondeCategoria && correspondeBusca;
+      });
+
+      container.innerHTML = "";
+
+      if (filtrados.length === 0) {
+        container.innerHTML =
+          '<div class="empty" style="display:block">Nenhum produto encontrado.</div>';
+        return;
+      }
+
+      filtrados.forEach((produto, index) => {
+        const card = document.createElement("article");
+        card.className = "product";
+        card.style.animationDelay = `${index * 0.06}s`;
+
+        card.innerHTML = `
+          <img
+            src="${produto.imagem}"
+            alt="${produto.nome}"
+            loading="lazy"
+          >
+          <div class="product-info">
+            <h3>${produto.nome}</h3>
+            <p>${produto.descricao}</p>
+            <div class="product-bottom">
+              <span class="price">${formatarPreco(produto.preco)}</span>
+              <span class="view-more">Ver detalhes →</span>
+            </div>
+          </div>
+        `;
+
+        card.addEventListener("click", () => abrirModal(produto));
+        container.appendChild(card);
+      });
+    }
+
+    function abrirModal(produto) {
+      document.getElementById("modalImage").src = produto.imagem;
+      document.getElementById("modalImage").alt = produto.nome;
+      document.getElementById("modalName").textContent = produto.nome;
+      document.getElementById("modalDescription").textContent =
+        produto.descricao;
+      document.getElementById("modalPrice").textContent =
+        formatarPreco(produto.preco);
+
+      modal.classList.add("show");
+    }
+
+    function fecharModal() {
+      modal.classList.remove("show");
+    }
+
+    document.querySelectorAll(".category").forEach(botao => {
+      botao.addEventListener("click", () => {
+        document.querySelector(".category.active")
+          .classList.remove("active");
+
+        botao.classList.add("active");
+        categoriaAtual = botao.dataset.category;
+        renderizar();
+      });
+    });
+
+    busca.addEventListener("input", renderizar);
+
+    document.getElementById("closeModal")
+      .addEventListener("click", fecharModal);
+
+    modal.addEventListener("click", evento => {
+      if (evento.target === modal) fecharModal();
+    });
+
+    document.addEventListener("keydown", evento => {
+      if (evento.key === "Escape") fecharModal();
+    });
+
+    renderizar();
+  </script>
+
+</body>
+</html>
